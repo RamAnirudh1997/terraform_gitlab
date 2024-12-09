@@ -1,0 +1,16 @@
+variables:
+  CONJUR_URL: "https://<CONJUR_URL>"
+  CONJUR_ACCOUNT: "<CONJUR_ACCOUNT>"
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: hashicorp/terraform:latest
+  script:
+    - echo "Fetching JWT token..."
+    - export JWT_TOKEN=$CI_JOB_JWT
+    - terraform init
+    - terraform plan -var="jwt_token=$JWT_TOKEN"
+    - terraform apply -auto-approve -var="jwt_token=$JWT_TOKEN"
